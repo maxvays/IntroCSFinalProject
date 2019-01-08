@@ -1,4 +1,3 @@
-
 breed [players player]
 breed [beams beam]
 breed [enemies enemy]
@@ -48,7 +47,7 @@ end
 
 to updateenemies
   if any? beams with [side = "player"] in-radius 3 [set HP HP - count beams with [side = "player"] in-radius 3 ask beams with [side = "player"] in-radius 3 [die]]
-  if HP < 1 [die]
+  if HP < 1 [ask turtle 0 [set money money + 1] die]
   ask enemies with [enemytype = "minion"] [ifelse reload = 0 [enemyshoot set reload 100 + random 100][set reload reload - 1] set heading towards turtle 0 if (distance turtle 0) > 50 [ifelse random 5 = 1 [fd .1][ifelse random 2 = 1 [set heading heading - 90 fd .1][set heading heading + 90 fd .1]]]]
 end
 
@@ -88,5 +87,8 @@ to spawnenemies
   create-enemies 5 * wave [set hidden? true set HP 2 set enemytype "minion" set shape "person" set color red set size 15 ifelse random 2 = 1 [setxy (random 2 * 2 - 1) * (max-pxcor - 10) (random 2 * (max-pycor - 10) - (max-pycor - 10))][setxy (random 2 * (max-pxcor - 10) - (max-pxcor - 10)) (random 2 * 2 - 1) * (max-pycor - 10) ]]
 end
 
+to-report moneys
+  report [money] of turtle 0
+end
 ;tempheading = [heading] of turtle
 ;ifelse (heading > 180 and [heading] of turtle 0 + 45 > heading and ([heading] of turtle 0 - 45) mod 360 < heading) or (heading < 180 and ([heading] of turtle 0 + 45) mod 360 > heading and ([heading] of turtle 0 - 45) < heading)
