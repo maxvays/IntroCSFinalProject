@@ -91,11 +91,11 @@ to updateenemies
 end
 
 to enemyminionshoot
-  hatch 1 [ fd 7 set breed beams set beamspeed 1 set side "enemyminion" set size 5 set shape "bullet" set heading towards turtle 0]
+  hatch 1 [ fd 7 set breed beams set beamspeed .5 set side "enemyminion" set size 5 set shape "bullet" set heading towards turtle 0]
 end
 
 to enemysnipershoot
-  hatch 1 [fd 7 set breed beams set beamspeed 2 set side "enemysniper" set size 8 set shape "bullet" set heading towards turtle 0]
+  hatch 1 [fd 7 set breed beams set beamspeed 1 set side "enemysniper" set size 8 set shape "bullet" set heading towards turtle 0]
 end
 
 to shoot
@@ -104,13 +104,13 @@ end
 
 to playerupdate
   if any? powerups in-radius 4 [set powertype [power] of one-of (powerups in-radius 4) ask powerups in-radius 4 [die]]
-  ifelse powertype = 4 [set powertype 0 set deflection true set powerduration 700] [ifelse powertype = 3 [set powertype 0 set normalreload shootspeed set shootspeed 100 set powerduration 500][ifelse powertype = 2 [set powertype 0 set normalshieldsize shieldsize set shieldsize 180 set powerduration 700][if powertype = 1 [set powertype 0 set money money + count enemies with [hidden? = false] ask enemies with [hidden? = false] [die]]]]]
+  ifelse powertype = 4 [ask patch 30 94 [set plabel "Deflection"] set powertype 0 set deflection true set powerduration 700] [ifelse powertype = 3 [ask patch 30 94 [set plabel "Machine Beam"] set powertype 0 set normalreload shootspeed set shootspeed 50 set powerduration 500][ifelse powertype = 2 [ask patch 30 94 [set plabel "Invincible"] set powertype 0 set normalshieldsize shieldsize set shieldsize 180 set powerduration 700][if powertype = 1 [set powertype 0 set money money + count enemies with [hidden? = false] ask enemies with [hidden? = false] [die]]]]]
   if powerduration > 0 [set powerduration powerduration - 1]
-  if powerduration = 0 [set shootspeed normalreload set shieldsize normalshieldsize set deflection false]
+  if powerduration = 0 [ask patch 30 94 [set plabel ""] set shootspeed normalreload set shieldsize normalshieldsize set deflection false]
   set hidden? false
   if mouse-inside? [set heading towards patch mouse-xcor mouse-ycor]
-  if any? beams with [side = "enemyminion"] in-radius 3 [ask beams with [side = "enemyminion"] in-radius 3 [ifelse (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0 and (heading + [shieldsize] of turtle 0) mod 360 > [heading] of turtle 0) or (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0 and ([heading] of turtle 0 + [shieldsize] of turtle 0) mod 360 > heading) or (not (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0) and not (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0) and heading + [shieldsize] of turtle 0 > [heading] of turtle 0 and heading - [shieldsize] of turtle 0 < [heading] of turtle 0) [ifelse deflection [set side "player" set heading heading + 180][die]][ask turtle 0 [set health health - 1] die]]]
-  if any? beams with [side = "enemysniper"] in-radius 3 [ask beams with [side = "enemysniper"] in-radius 3 [ifelse (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0 and (heading + [shieldsize] of turtle 0) mod 360 > [heading] of turtle 0) or (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0 and ([heading] of turtle 0 + [shieldsize] of turtle 0) mod 360 > heading) or (not (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0) and not (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0) and heading + [shieldsize] of turtle 0 > [heading] of turtle 0 and heading - [shieldsize] of turtle 0 < [heading] of turtle 0) [ifelse deflection [set side "player" set heading heading + 180][die]][ask turtle 0 [set health health - 5] die]]]
+  if any? beams with [side = "enemyminion"] in-radius 3 [ask beams with [side = "enemyminion"] in-radius 3 [ifelse (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0 and (heading + [shieldsize] of turtle 0) mod 360 > [heading] of turtle 0) or (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0 and ([heading] of turtle 0 + [shieldsize] of turtle 0) mod 360 > heading) or (not (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0) and not (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0) and heading + [shieldsize] of turtle 0 > [heading] of turtle 0 and heading - [shieldsize] of turtle 0 < [heading] of turtle 0) [ifelse deflection [set side "player" set heading heading + 180][die]][ask turtle 0 [set health health - wave] die]]]
+  if any? beams with [side = "enemysniper"] in-radius 3 [ask beams with [side = "enemysniper"] in-radius 3 [ifelse (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0 and (heading + [shieldsize] of turtle 0) mod 360 > [heading] of turtle 0) or (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0 and ([heading] of turtle 0 + [shieldsize] of turtle 0) mod 360 > heading) or (not (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0) and not (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0) and heading + [shieldsize] of turtle 0 > [heading] of turtle 0 and heading - [shieldsize] of turtle 0 < [heading] of turtle 0) [ifelse deflection [set side "player" set heading heading + 180][die]][ask turtle 0 [set health health - 5 * wave] die]]]
   if any? enemies with [enemytype = "rocket"] in-radius 2 [set health health - 10 ask enemies with [enemytype = "rocket"] in-radius 2 [die]]
   if health < 1 [set gameover? true die]
 end
@@ -132,6 +132,6 @@ to d
 end
 
 to spawnenemies
-  create-enemies 5 * wave [set hidden? true set HP 2 ifelse wave < 2 [set enemytype "minion"  set shape "person"] [ifelse wave > 4 [ifelse random 5 = 1 [set enemytype "sniper" set shape "person soldier" set HP 1] [ifelse random 5 = 1 [set enemytype "rocket" set shape "rocket" set HP 1] [set enemytype "minion"  set shape "person"]]] [ifelse random 3 = 1 [set enemytype "rocket" set shape "rocket" set HP 1] [set enemytype "minion"  set shape "person"]]] set color red set size 15 ifelse random 2 = 1 [setxy (random 2 * 2 - 1) * (max-pxcor - 10) (random ((max-pycor - 10) * 2) - (max-pycor - 10))][setxy (random (2 * (max-pxcor - 10)) - (max-pxcor - 10)) (random 2 * 2 - 1) * (max-pycor - 10) ]]
+  create-enemies 5 * wave [set hidden? true set HP wave ifelse wave < 2 [set enemytype "minion"  set shape "person"] [ifelse wave > 4 [ifelse random 5 = 1 [set enemytype "sniper" set shape "person soldier" set HP wave / 3] [ifelse random 5 = 1 [set enemytype "rocket" set shape "rocket" set HP 1] [set enemytype "minion"  set shape "person"]]] [ifelse random 3 = 1 [set enemytype "rocket" set shape "rocket" set HP 1] [set enemytype "minion"  set shape "person"]]] set color red set size 15 ifelse random 2 = 1 [setxy (random 2 * 2 - 1) * (max-pxcor - 10) (random ((max-pycor - 10) * 2) - (max-pycor - 10))][setxy (random (2 * (max-pxcor - 10)) - (max-pxcor - 10)) (random 2 * 2 - 1) * (max-pycor - 10) ]]
 
 end
