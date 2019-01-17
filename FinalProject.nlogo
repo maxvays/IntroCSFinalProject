@@ -4,7 +4,7 @@ breed [enemies enemy]
 breed [healthbars healthbar]
 breed [powerups powerup]
 
-globals [playerbeamspeed powerupcountdown wave gameover? upgrading? powertype deflection]
+globals [start? playerbeamspeed powerupcountdown wave gameover? upgrading? powertype deflection]
 
 beams-own [beamspeed side]
 players-own [powerupspawnrate normalshieldsize powerduration normalreload reload health numbeams damage accuracy shieldsize money speed shootspeed]
@@ -13,6 +13,7 @@ powerups-own [power durationleft]
 
 to setup
   ca
+  set start? true
   set wave 1
   set gameover? false
   set upgrading? false
@@ -27,14 +28,14 @@ to setup
 end
 
 to go
-  if gameover? [showgameoverscreen stop]
+  ifelse start? [showstartgamescreen tick ] [ if gameover? [showgameoverscreen stop]
   if count enemies = 0 [set wave wave + 1 set upgrading? true spawnenemies ]
   ifelse not upgrading? [every 5 [ifelse count enemies with [hidden? = true] > 4 [ask n-of 5 enemies with [hidden? = true] [set hidden? false]][ask enemies [set hidden? false]]]
     every .01[
       ask patch 94 94 [set plabel (word "Wave: " wave)]
-      ask patch -40 94 [set plabel (word "Money: " [money] of turtle 0)]
-      ifelse powertype = 4 [ask patch 36 94 [set plabel "Deflection"]] [ifelse powertype = 3 [ask patch 36 94 [set plabel "Machine Beam"]][ ifelse powertype = 2 [ask patch 36 94 [set plabel "Invincible"]][if powertype = 1 [ask patch 36 94 [set plabel "Clear all"]]]]]
-      if [powerduration] of turtle 0 = 0 [ask patch 36 94 [set plabel ""]]
+      ask patch -60 94 [set plabel (word "Money: " [money] of turtle 0)]
+      ifelse powertype = 4 [ask patch 20 94 [set plabel "Deflection"]] [ifelse powertype = 3 [ask patch 20 94 [set plabel "Machine Beam"]][ ifelse powertype = 2 [ask patch 20 94 [set plabel "Invincible"]][if powertype = 1 [ask patch 20 94 [set plabel "Clear all"]]]]]
+      if [powerduration] of turtle 0 = 0 [ask patch 20 94 [set plabel ""]]
       if powerupcountdown < 0 [spawnpowerup set powerupcountdown 1000 * (1 + 1 / [powerupspawnrate] of turtle 0)]
       set powerupcountdown powerupcountdown - 1
       ask powerups [powerupdate]
@@ -45,7 +46,7 @@ to go
       ask enemies with [hidden? = false] [updateenemies]
       ask healthbars [healthupdate]
       ask players [playerupdate]
-      tick]][showupgradescreen tick]
+        tick]][showupgradescreen tick]]
 end
 
 
@@ -66,7 +67,8 @@ end
 
 to showgameoverscreen
   clear-turtles
-  ask patch 70 0 [set plabel (word "Game over. You got to wave: " wave)]
+  import-drawing "end game (1).png"
+  ask patch 50 -80 [set plabel (word "Game over. You got to wave: " wave)]
 end
 
 to showupgradescreen
@@ -78,16 +80,16 @@ to showupgradescreen
   ask patches [set plabel ""]
   crt 1 [setxy 17 39 set color 0]
   ask turtles-on patch 17 39 [set label (word "Money: " [money] of turtle 0)]
-  crt 1 [setxy 98 18 set color 0]
+  crt 1 [setxy 80 18 set color 0]
   if mouse-inside? [
-    ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Speed - increase how fast your tank moves"]][
-      ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Accuracy - increase how accurate your beams are"]][
-        ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Beams - increase how many beams your tank shoots"]][
-          ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Damage - increase how much damage your beams do"]][
-            ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Health - increase how much health your tank has"]][
-              ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Reload speed - increase how fast your tank shoots"]][
-                ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Shield size - increase how big your shield is"]][
-                  ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Powerup rate - increase how fast powerups spawn"]][ask turtles-on patch 98 18 [set label ""]]
+    ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Speed - increase how fast your tank moves"]][
+      ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Accuracy - increase how accurate your beams are"]][
+        ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Beams - increase how many beams your tank shoots"]][
+          ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Damage - increase how much damage your beams do"]][
+            ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Health - increase how much health your tank has"]][
+              ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Reload speed - increase how fast your tank shoots"]][
+                ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Shield size - increase how big your shield is"]][
+                  ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Powerup rate - increase how fast powerups spawn"]][ask turtles-on patch 80 18 [set label ""]]
                 ]
               ]
             ]
@@ -115,6 +117,12 @@ to showupgradescreen
   ]
 end
 
+to showstartgamescreen
+  import-drawing "Start Screen (3).png"
+  ask turtle 0 [set hidden? true]
+  ask turtle 1 [set hidden? true]
+ if mouse-down? and mouse-inside? and ticks mod 3 = 1 [if mouse-xcor > -60 and mouse-xcor < 60 and mouse-ycor > -70 and mouse-ycor < -40 [set start? false clear-drawing ask turtle 0[set hidden? false ask turtle 1 [set hidden? false]]] ]
+end
 to beamupdate
   if pcolor = red [die]
   fd 2 * beamspeed
@@ -142,9 +150,9 @@ end
 
 to playerupdate
   if any? powerups in-radius 4 [set powertype [power] of one-of (powerups in-radius 4) ask powerups in-radius 4 [die]]
-  ifelse powertype = 4 [ask patch 30 94 [set plabel "Deflection"] set powertype 0 set deflection true set powerduration 700] [ifelse powertype = 3 [ask patch 30 94 [set plabel "Machine Beam"] set powertype 0 set normalreload shootspeed set shootspeed 50 set powerduration 500][ifelse powertype = 2 [ask patch 30 94 [set plabel "Invincible"] set powertype 0 set normalshieldsize shieldsize set shieldsize 180 set powerduration 700][if powertype = 1 [set powertype 0 set money money + count enemies with [hidden? = false] ask enemies with [hidden? = false] [die]]]]]
+  ifelse powertype = 4 [ask patch 20 94 [set plabel "Deflection"] set powertype 0 set deflection true set powerduration 700] [ifelse powertype = 3 [ask patch 20 94 [set plabel "Machine Beam"] set powertype 0 set normalreload shootspeed set shootspeed 50 set powerduration 500][ifelse powertype = 2 [ask patch 20 94 [set plabel "Invincible"] set powertype 0 set normalshieldsize shieldsize set shieldsize 180 set powerduration 700][if powertype = 1 [set powertype 0 set money money + count enemies with [hidden? = false] ask enemies with [hidden? = false] [die]]]]]
   if powerduration > 0 [set powerduration powerduration - 1]
-  if powerduration = 0 [ask patch 30 94 [set plabel ""] set shootspeed normalreload set shieldsize normalshieldsize set deflection false]
+  if powerduration = 0 [ask patch 20 94 [set plabel ""] set shootspeed normalreload set shieldsize normalshieldsize set deflection false]
   set hidden? false
   if mouse-inside? [set heading towards patch mouse-xcor mouse-ycor]
   if any? beams with [side = "enemyminion"] in-radius 3 [ask beams with [side = "enemyminion"] in-radius 3 [ifelse (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0 and (heading + [shieldsize] of turtle 0) mod 360 > [heading] of turtle 0) or (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0 and ([heading] of turtle 0 + [shieldsize] of turtle 0) mod 360 > heading) or (not (heading > 360 - [shieldsize] of turtle 0 and [heading] of turtle 0 < [shieldsize] of turtle 0) and not (heading < [shieldsize] of turtle 0 and [heading] of turtle 0 > 360 - [shieldsize] of turtle 0) and heading + [shieldsize] of turtle 0 > [heading] of turtle 0 and heading - [shieldsize] of turtle 0 < [heading] of turtle 0) [ifelse deflection [set side "player" set heading heading + 180][die]][ask turtle 0 [set health health - wave] die]]]
