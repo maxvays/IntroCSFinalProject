@@ -67,29 +67,30 @@ end
 
 to showgameoverscreen
   clear-turtles
-  import-drawing "end game (1).png"
+  import-drawing "End game (1).png"
   ask patch 50 -80 [set plabel (word "Game over. You got to wave: " wave)]
 end
 
 to showupgradescreen
   import-drawing "Upgrade Screen (4).png"
   import-drawing "X (3).png"
+  ask powerups [set hidden? true]
   ask turtle 0 [set hidden? true set powerduration 0]
   ask turtle 1 [set hidden? true]
   ask beams [die]
   ask patches [set plabel ""]
   crt 1 [setxy 17 39 set color 0]
   ask turtles-on patch 17 39 [set label (word "Money: " [money] of turtle 0)]
-  crt 1 [setxy 80 18 set color 0]
+  crt 1 [setxy 98 18 set color 0]
   if mouse-inside? [
-    ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Speed - increase how fast your tank moves"]][
-      ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Accuracy - increase how accurate your beams are"]][
-        ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Beams - increase how many beams your tank shoots"]][
-          ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Damage - increase how much damage your beams do"]][
-            ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 80 18 [set label "Health - increase how much health your tank has"]][
-              ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Reload speed - increase how fast your tank shoots"]][
-                ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Shield size - increase how big your shield is"]][
-                  ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 80 18 [set label "Powerup rate - increase how fast powerups spawn"]][ask turtles-on patch 80 18 [set label ""]]
+    ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Speed - increase how fast your tank moves"]][
+      ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Accuracy - increase how accurate your beams are"]][
+        ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Beams - increase how many beams your tank shoots"]][
+          ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Damage - increase how much damage your beams do"]][
+            ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtles-on patch 98 18 [set label "Health - increase how much health your tank has"]][
+              ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Reload speed - increase how fast your tank shoots"]][
+                ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Shield size - increase how big your shield is"]][
+                  ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtles-on patch 98 18 [set label "Powerup rate - increase how fast powerups spawn"]][ask turtles-on patch 98 18 [set label ""]]
                 ]
               ]
             ]
@@ -97,7 +98,7 @@ to showupgradescreen
         ]
       ]
     ]
-    if mouse-down? and ticks mod 3 = 1[
+    if mouse-down?[
       ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtle 0 [if money > 4 [set speed speed + .3 set money money - 5]]][
         ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtle 0 [if money > 4 [set accuracy accuracy + 1 set money money - 5]]][
           ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtle 0 [if money > 14 and upgrading? [set numbeams numbeams + 1 set money money - 15]]][
@@ -105,7 +106,7 @@ to showupgradescreen
               ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtle 0 [if money > 4 [set money money - 5 set health health + 25]]][
                 ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtle 0 [if money > 4 [set normalreload normalreload + 1 set money money - 5 set shootspeed shootspeed + 1]]][
                   ifelse mouse-xcor > 6 and mouse-xcor < 36 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtle 0 [if money > 4 [set normalshieldsize normalshieldsize + 1 set shieldsize shieldsize + 3 set money money - 5]]][
-                    ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtle 0 [if money > 4 and upgrading? [set money money - 5 set powerupspawnrate powerupspawnrate + 1]]][if mouse-xcor > 79 and mouse-xcor < 94 and mouse-ycor > 72 and mouse-ycor < 92 [set upgrading? false clear-drawing ask patches [set plabel ""] ask turtles-on patch 17 39 [die] ask turtles-on patch 98 18 [die]]]
+                    ifelse mouse-xcor > 45 and mouse-xcor < 75 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtle 0 [if money > 4 and upgrading? [set money money - 5 set powerupspawnrate powerupspawnrate + 1]]][if mouse-xcor > 79 and mouse-xcor < 94 and mouse-ycor > 72 and mouse-ycor < 92 [set upgrading? false clear-drawing ask patches [set plabel ""] ask turtles-on patch 17 39 [die] ask turtles-on patch 98 18 [die] ask powerups [set hidden? false] ask turtle 0 [setxy 0 0]]]
                   ]
                 ]
               ]
@@ -113,6 +114,7 @@ to showupgradescreen
           ]
         ]
       ]
+      wait .2
     ]
   ]
 end
