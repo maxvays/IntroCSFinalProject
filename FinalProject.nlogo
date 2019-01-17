@@ -72,7 +72,7 @@ end
 to showupgradescreen
   import-drawing "Upgrade Screen (4).png"
   import-drawing "X (3).png"
-  ask turtle 0 [set hidden? true]
+  ask turtle 0 [set hidden? true set powerduration 0]
   ask turtle 1 [set hidden? true]
   ask beams [die]
   ask patches [set plabel ""]
@@ -95,7 +95,7 @@ to showupgradescreen
         ]
       ]
     ]
-    if mouse-down? [
+    if mouse-down? and ticks mod 3 = 1[
       ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtle 0 [if money > 4 [set speed speed + .3 set money money - 5]]][
         ifelse mouse-xcor > -73 and mouse-xcor < -43 and mouse-ycor > -70 and mouse-ycor < -40 [ask turtle 0 [if money > 4 [set accuracy accuracy + 1 set money money - 5]]][
           ifelse mouse-xcor > -33 and mouse-xcor < -3 and mouse-ycor > -30 and mouse-ycor < 0 [ask turtle 0 [if money > 14 and upgrading? [set numbeams numbeams + 1 set money money - 15]]][
@@ -171,5 +171,4 @@ end
 
 to spawnenemies
   create-enemies 5 * wave [set hidden? true set HP wave ifelse wave < 2 [set enemytype "minion"  set shape "person"] [ifelse wave > 4 [ifelse random 5 = 1 [set enemytype "sniper" set shape "person soldier" set HP wave / 3] [ifelse random 5 = 1 [set enemytype "rocket" set shape "rocket" set HP 1] [set enemytype "minion"  set shape "person"]]] [ifelse random 3 = 1 [set enemytype "rocket" set shape "rocket" set HP 1] [set enemytype "minion"  set shape "person"]]] set color red set size 15 ifelse random 2 = 1 [setxy (random 2 * 2 - 1) * (max-pxcor - 10) (random ((max-pycor - 10) * 2) - (max-pycor - 10))][setxy (random (2 * (max-pxcor - 10)) - (max-pxcor - 10)) (random 2 * 2 - 1) * (max-pycor - 10) ]]
-
 end
